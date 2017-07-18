@@ -12,11 +12,10 @@ double y_rightHand;//11
 double x_leftHand;
 double x_rightHand;
 
-double x_head ;
+double x_head;
 double y_head;
-
-double x_POS ;
-double y_POS  ;
+double x_POS;
+double y_POS;
 
 double result;
 int state= 0;// off
@@ -33,6 +32,7 @@ void closePaint (){
 	state=0;
 }
 
+
 void VRPN_CALLBACK handle_tracker( void* userData, const vrpn_TRACKERCB b )
 {
 	if (b.sensor == 3) {
@@ -45,8 +45,6 @@ void VRPN_CALLBACK handle_tracker( void* userData, const vrpn_TRACKERCB b )
 		cout << "y_head:" <<y_head<<endl;
 	}
 
-
-
 	if (b.sensor == 7) {
 		y_leftHand= b.pos[1];
 		x_leftHand=b.pos[0];
@@ -54,11 +52,16 @@ void VRPN_CALLBACK handle_tracker( void* userData, const vrpn_TRACKERCB b )
 	}
 
 	if (b.sensor == 11) {
+
 		y_rightHand= b.pos[1];
 		x_rightHand=b.pos[0];
-		//x_POS =b.pos[0]/9;
-		//	y_POS =b.pos[1]/9;
-		cout << "y_rightHand:" << y_rightHand<<endl;
+		
+		//move the hand with calibration
+		x_POS= x_rightHand*1000;
+		y_POS= y_rightHand*1000;
+		
+		SetCursorPos(x_POS, y_POS);
+		
 	}
 
 	result= abs(x_leftHand-x_rightHand);
@@ -72,17 +75,12 @@ void VRPN_CALLBACK handle_tracker( void* userData, const vrpn_TRACKERCB b )
 		}
 	}
 
-	/*
-	if(y_leftHand > y_head){
-	} correction professor
-	*/
-
 	if (y_head < y_leftHand  ){
 		cout << "y_leftHandUp" <<endl;
 		if (state==1){
 			closePaint ();
 		}
-		//mouse_event(MOUSEEVENTF_LEFTDOWN,0,0,0,0);
+		
 	}
 
 	else if (spine <y_rightHand){
