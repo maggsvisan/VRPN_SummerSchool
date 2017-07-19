@@ -30,17 +30,6 @@ int previousState = 0;
 
 sf::Color ColorToChange;
 
-void changeShapeCircle(){
-	sf::CircleShape shape(100.f);
-	stateShape = 0;
-}
-
-void changeShapeRect(){
-	// define a 120x50 rectangle
-	sf::RectangleShape shape(sf::Vector2f(120, 50));
-	stateShape = 1;
-
-}
 
 void changeBlue(){
 	ColorToChange = sf::Color::Blue;
@@ -100,17 +89,18 @@ void VRPN_CALLBACK handle_tracker(void* userData, const vrpn_TRACKERCB b)
 	}
 
 
-	if (y_head < y_rightHand){
+	if (y_head < y_rightHand && y_head > y_leftHand){
+		
 		if (stateShape == 0){
 			cout << "change RECTANGLE\n";
-			changeShapeRect();
+			stateShape = 1;
 		}
 	}
 
-	if (y_head < y_leftHand){
+	if (y_head < y_leftHand && y_head > y_rightHand){
 		if (stateShape == 1){
 			cout << "change CIRCLE\n";
-			changeShapeCircle();
+			stateShape = 0;
 		}
 	}
 }
@@ -119,9 +109,11 @@ int main(int argc, char* argv[])
 {
 
 	ColorToChange = sf::Color::Green;
+	sf::CircleShape shape(50);
+	sf::RectangleShape changed_shape(sf::Vector2f(120, 50));
 
 	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
+	
 
 	vrpn_Tracker_Remote* vrpnTracker0 = new vrpn_Tracker_Remote("Tracker0@10.4.130.58:3883");//Changer en local
 	vrpnTracker0->register_change_handler(0, handle_tracker);
@@ -132,6 +124,8 @@ int main(int argc, char* argv[])
 
 		//change color taking into account the interaction
 		shape.setFillColor(ColorToChange);
+		changed_shape.setFillColor(ColorToChange);
+
 		if (window.isOpen())
 		{
 			sf::Event event;
@@ -142,7 +136,14 @@ int main(int argc, char* argv[])
 			}
 
 			window.clear();
-			window.draw(shape);
+
+			if (stateShape == 0){
+				window.draw(shape);
+			}
+			else {
+				window.draw(changed_shape);
+			}
+			
 			window.display();
 		}
 
