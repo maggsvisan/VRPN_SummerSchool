@@ -6,26 +6,85 @@ using UnityEngine.UI;
 
 public class kinect_rotate : MonoBehaviour
 {
+    // dont run Update() if there is no user
+    KinectManager kinectManager = KinectManager.Instance;
+
+    // the joint we want to track
+    public KinectWrapper.NuiSkeletonPositionIndex RightHand = KinectWrapper.NuiSkeletonPositionIndex.HandRight;
+    public KinectWrapper.NuiSkeletonPositionIndex LeftHand = KinectWrapper.NuiSkeletonPositionIndex.HandLeft;
+
     public float speed;
     private Rigidbody rb;
-    private GestureListener gestureListener;
+    //private GestureListener gestureListener;
 
-    void Start(){
+    Vector3 RightHandPos;
+    Vector3 LeftHandPos;
+
+
+    void Start()
+    {
         // hide mouse cursor
         Cursor.visible = false;
-        gestureListener = Camera.main.GetComponent<GestureListener>();
+        //gestureListener = Camera.main.GetComponent<GestureListener>();
     }
 
 
-    void Update() {
-        KinectManager kinectManager = KinectManager.Instance;
-        RotateToNext();
+    void Update()
+    {
+        KinectManager manager = KinectManager.Instance;
 
-        Debug.Log("kinectManager OK");
 
+        if (manager && manager.IsInitialized())
+        {
+            Debug.Log("kinectManager OK");
+            if (manager.IsUserDetected())
+            {
+                uint userId = manager.GetPlayer1ID();
+
+                if (manager.IsJointTracked(userId, (int)RightHand))
+                {
+                    // output the joint position for easy tracking
+                    RightHandPos = manager.GetJointPosition(userId, (int)RightHand);
+                }
+
+                if (manager.IsJointTracked(userId, (int)LeftHand))
+                {
+                    // output the joint position for easy tracking
+                    LeftHandPos = manager.GetJointPosition(userId, (int)LeftHand);
+                }
+
+            }
+        }
+
+
+
+
+
+
+        if (LeftHandPos.y > .6f)
+        {
+            RotateToNext();
+        }
+        else if (RightHandPos.y > .6f)
+        {
+            RotateToPrevious();
+        }
+        else
+        {
+            Stand();
+        }
+
+
+
+
+
+
+
+        /*
         if (gestureListener)
         {
-            if (gestureListener.IsSwipeLeft()){
+            if (gestureListener.IsSwipeLeft())
+            {
                 RotateToNext();
                 Debug.Log("RotateToNext");
 
@@ -36,36 +95,38 @@ public class kinect_rotate : MonoBehaviour
 
                 RotateToPrevious();
                 Debug.Log("RotateToPrevious");
-             }
+            }
 
             else
             {
                 Stand();
                 Debug.Log("Stand");
             }
-                
+
         }
 
         else
         {
             Stand();
         }
+        */
 
     }
 
 
 
-    public void RotateToNext(){
-       transform.Rotate(Vector3.up, speed * Time.deltaTime);
+    public void RotateToNext()
+    {
+        transform.Rotate(Vector3.up, speed * Time.deltaTime);
     }
 
-    public void RotateToPrevious(){
-        transform.Rotate(Vector3.up, speed * 10 * Time.deltaTime);
+    public void RotateToPrevious()
+    {
+        transform.Rotate(Vector3.up, speed * -10 * Time.deltaTime);
     }
 
     public void Stand()
     {
-        transform.Rotate(Vector3.up, 0* 10 * Time.deltaTime);
+        transform.Rotate(Vector3.up, 0 * 10 * Time.deltaTime);
     }
 }
-
