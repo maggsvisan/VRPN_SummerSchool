@@ -1,0 +1,71 @@
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
+
+
+public class kinect_rotate : MonoBehaviour
+{
+    public float speed;
+    private Rigidbody rb;
+    private GestureListener gestureListener;
+
+    void Start(){
+        // hide mouse cursor
+        Cursor.visible = false;
+        gestureListener = Camera.main.GetComponent<GestureListener>();
+    }
+
+
+    void Update() {
+        KinectManager kinectManager = KinectManager.Instance;
+        RotateToNext();
+
+        Debug.Log("kinectManager OK");
+
+        if (gestureListener)
+        {
+            if (gestureListener.IsSwipeLeft()){
+                RotateToNext();
+                Debug.Log("RotateToNext");
+
+            }
+
+            else if (gestureListener.IsSwipeRight())
+            {
+
+                RotateToPrevious();
+                Debug.Log("RotateToPrevious");
+             }
+
+            else
+            {
+                Stand();
+                Debug.Log("Stand");
+            }
+                
+        }
+
+        else
+        {
+            Stand();
+        }
+
+    }
+
+
+
+    public void RotateToNext(){
+       transform.Rotate(Vector3.up, speed * Time.deltaTime);
+    }
+
+    public void RotateToPrevious(){
+        transform.Rotate(Vector3.up, speed * 10 * Time.deltaTime);
+    }
+
+    public void Stand()
+    {
+        transform.Rotate(Vector3.up, 0* 10 * Time.deltaTime);
+    }
+}
+
