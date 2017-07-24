@@ -72,8 +72,24 @@ public class  KinectRotate : MonoBehaviour
 
         if (RightHandPos.y > SpinePos.y && LeftHandPos.y > SpinePos.y)
         {
+            Debug.Log("Up");
+        }
+
+        if (RightHandPos.y >= SpinePos.y && RightHandPos.z < 1)
+        {
             Debug.Log("zoom in");
         }
+
+        if (LeftHandPos.y >= SpinePos.y && LeftHandPos.z < 1)
+        {
+            Debug.Log("zoom OUT");
+        }
+
+        if (LeftHandPos.y >= SpinePos.y && RightHandPos.y >= SpinePos.y)
+        {
+            Debug.Log("pilot");
+        }
+
 
    }
 
