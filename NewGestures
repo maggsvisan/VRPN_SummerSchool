@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-
+ 
 public class  KinectRotate : MonoBehaviour
 {
     // dont run Update() if there is no user
