@@ -70,6 +70,10 @@ public class  KinectRotate : MonoBehaviour
             Debug.Log("turn RIGHT");
         }
 
+        if (RightHandPos.y > SpinePos.y && LeftHandPos.y > SpinePos.y)
+        {
+            Debug.Log("zoom in");
+        }
 
    }
 
