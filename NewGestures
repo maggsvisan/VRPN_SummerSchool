@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 
 public class  KinectRotate : MonoBehaviour
@@ -13,8 +14,10 @@ public class  KinectRotate : MonoBehaviour
     public KinectWrapper.NuiSkeletonPositionIndex RightHand = KinectWrapper.NuiSkeletonPositionIndex.HandRight;
     public KinectWrapper.NuiSkeletonPositionIndex LeftHand = KinectWrapper.NuiSkeletonPositionIndex.HandLeft;
     public KinectWrapper.NuiSkeletonPositionIndex SpineCenter= KinectWrapper.NuiSkeletonPositionIndex.Spine;
+    public KinectWrapper.NuiSkeletonPositionIndex HeadCenter = KinectWrapper.NuiSkeletonPositionIndex.Head;
 
     public float speed;
+    public float result; //determine clap action
     public float centerPerson;
     private Rigidbody rb;
     //private GestureListener gestureListener;
@@ -22,6 +25,7 @@ public class  KinectRotate : MonoBehaviour
     public Vector3 RightHandPos;
     public Vector3 LeftHandPos;
     public Vector3 SpinePos;
+    public Vector3 HeadPos;
 
     void Start()
     { // hide mouse cursor
@@ -54,6 +58,11 @@ public class  KinectRotate : MonoBehaviour
                 {
                     SpinePos = manager.GetJointPosition(userId, (int)SpineCenter);
                 }
+
+                if (manager.IsJointTracked(userId, (int)HeadCenter))
+                {
+                    HeadPos = manager.GetJointPosition(userId, (int)HeadCenter);
+                }
                 
             }
 
@@ -70,29 +79,36 @@ public class  KinectRotate : MonoBehaviour
                     Debug.Log("turn RIGHT");
                 }
 
-                if (RightHandPos.y > SpinePos.y && LeftHandPos.y > SpinePos.y)
+                if (RightHandPos.y > HeadPos.y && LeftHandPos.y > HeadPos.y)
                 {
                     Debug.Log("Up");
                 }
-            
+            /*
                 if (LeftHandPos.z < SpinePos.z && RightHandPos.z < SpinePos.z)
                 {
                     Debug.Log("pilot");
                 }
-            
+            */
                 if (RightHandPos.z > SpinePos.z && LeftHandPos.z < SpinePos.z)
                 {
                     Debug.Log("zoom in");
                 }
 
-                if (LeftHandPos.z > SpinePos.z && RightHandPos.z < SpinePos.z)
+                if (RightHandPos.z < SpinePos.z && LeftHandPos.z > SpinePos.z)
                 {
                     Debug.Log("zoom OUT");
                 }
-            
+                
+               // if 
+                result = Math.Abs(LeftHandPos.x - RightHandPos.x);
+
+                if (result < 0.4) //clap
+                {
+                    Debug.Log("Down");
+                }
+
+                
         }
-
-
         
    }
 
