@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
- 
+
 public class  KinectRotate : MonoBehaviour
 {
     // dont run Update() if there is no user
@@ -54,43 +54,46 @@ public class  KinectRotate : MonoBehaviour
                 {
                     SpinePos = manager.GetJointPosition(userId, (int)SpineCenter);
                 }
-
+                
             }
 
+
+            // new gestures //
+
+                if (RightHandPos.y > SpinePos.y && LeftHandPos.y < SpinePos.y)
+                {
+                    Debug.Log("turn left");
+                }
+
+                if (RightHandPos.y < SpinePos.y && LeftHandPos.y > SpinePos.y)
+                {
+                    Debug.Log("turn RIGHT");
+                }
+
+                if (RightHandPos.y > SpinePos.y && LeftHandPos.y > SpinePos.y)
+                {
+                    Debug.Log("Up");
+                }
+            
+                if (LeftHandPos.z < SpinePos.z && RightHandPos.z < SpinePos.z)
+                {
+                    Debug.Log("pilot");
+                }
+            
+                if (RightHandPos.z > SpinePos.z && LeftHandPos.z < SpinePos.z)
+                {
+                    Debug.Log("zoom in");
+                }
+
+                if (LeftHandPos.z > SpinePos.z && RightHandPos.z < SpinePos.z)
+                {
+                    Debug.Log("zoom OUT");
+                }
+            
         }
 
 
-        if (RightHandPos.y > SpinePos.y && LeftHandPos.y < SpinePos.y)
-        {
-            Debug.Log("turn left");
-        }
-
-        if (RightHandPos.y < SpinePos.y && LeftHandPos.y > SpinePos.y)
-        {
-            Debug.Log("turn RIGHT");
-        }
-
-        if (RightHandPos.y > SpinePos.y && LeftHandPos.y > SpinePos.y)
-        {
-            Debug.Log("Up");
-        }
-
-        if (RightHandPos.y >= SpinePos.y && RightHandPos.z < 1)
-        {
-            Debug.Log("zoom in");
-        }
-
-        if (LeftHandPos.y >= SpinePos.y && LeftHandPos.z < 1)
-        {
-            Debug.Log("zoom OUT");
-        }
-
-        if (LeftHandPos.y >= SpinePos.y && RightHandPos.y >= SpinePos.y)
-        {
-            Debug.Log("pilot");
-        }
-
-
+        
    }
 
 
