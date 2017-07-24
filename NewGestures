@@ -83,12 +83,7 @@ public class  KinectRotate : MonoBehaviour
                 {
                     Debug.Log("Up");
                 }
-            /*
-                if (LeftHandPos.z < SpinePos.z && RightHandPos.z < SpinePos.z)
-                {
-                    Debug.Log("pilot");
-                }
-            */
+     
                 if (RightHandPos.z > SpinePos.z && LeftHandPos.z < SpinePos.z)
                 {
                     Debug.Log("zoom in");
@@ -99,12 +94,12 @@ public class  KinectRotate : MonoBehaviour
                     Debug.Log("zoom OUT");
                 }
                 
-               // if 
+
                 result = Math.Abs(LeftHandPos.x - RightHandPos.x);
 
                 if (result < 0.4) //clap
                 {
-                    Debug.Log("Down");
+                    Debug.Log("Down"); // landing
                 }
 
                 
