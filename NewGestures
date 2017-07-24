@@ -1,0 +1,87 @@
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
+
+
+public class  KinectRotate : MonoBehaviour
+{
+    // dont run Update() if there is no user
+    KinectManager kinectManager = KinectManager.Instance;
+
+    // the joint we want to track
+    public KinectWrapper.NuiSkeletonPositionIndex RightHand = KinectWrapper.NuiSkeletonPositionIndex.HandRight;
+    public KinectWrapper.NuiSkeletonPositionIndex LeftHand = KinectWrapper.NuiSkeletonPositionIndex.HandLeft;
+    public KinectWrapper.NuiSkeletonPositionIndex SpineCenter= KinectWrapper.NuiSkeletonPositionIndex.Spine;
+
+    public float speed;
+    public float centerPerson;
+    private Rigidbody rb;
+    //private GestureListener gestureListener;
+
+    public Vector3 RightHandPos;
+    public Vector3 LeftHandPos;
+    public Vector3 SpinePos;
+
+    void Start()
+    { // hide mouse cursor
+       Cursor.visible = false;
+    }
+
+    void Update()
+    {
+        KinectManager manager = KinectManager.Instance;
+
+        if (manager && manager.IsInitialized())
+        {
+            //Debug.Log("kinectManager OK");
+
+            if (manager.IsUserDetected())
+            {
+                uint userId = manager.GetPlayer1ID();
+
+                if (manager.IsJointTracked(userId, (int)RightHand))
+                {
+                    RightHandPos = manager.GetJointPosition(userId, (int)RightHand);  // output the joint position for easy tracking
+                }
+
+                if (manager.IsJointTracked(userId, (int)LeftHand))
+                {
+                    LeftHandPos = manager.GetJointPosition(userId, (int)LeftHand);
+                }
+
+                if (manager.IsJointTracked(userId, (int)SpineCenter))
+                {
+                    SpinePos = manager.GetJointPosition(userId, (int)SpineCenter);
+                }
+
+            }
+
+        }
+
+
+        if (RightHandPos.y > SpinePos.y && LeftHandPos.y < SpinePos.y)
+        {
+            Debug.Log("turn left");
+        }
+
+        if (RightHandPos.y < SpinePos.y && LeftHandPos.y > SpinePos.y)
+        {
+            Debug.Log("turn RIGHT");
+        }
+
+
+   }
+
+
+//this function is to move the object //
+    public void RotateToPrevious()
+    {
+      transform.Rotate(Vector3.up, speed * -10 * Time.deltaTime);
+    }
+
+    public void Stand()
+    {
+      transform.Rotate(Vector3.up, 0 * 10 * Time.deltaTime);
+    }
+}
